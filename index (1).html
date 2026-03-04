@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório de Regulação — Sobradinho 2025</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131826;
+    --card: #1a2035;
+    --border: #252e48;
+    --accent: #4f8ef7;
+    --accent2: #38d9a9;
+    --accent3: #f7834f;
+    --accent4: #c084fc;
+    --text: #e8ecf5;
+    --muted: #7a8aaa;
+    --danger: #f4646a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0d1526 0%, #111b35 50%, #0d1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(56,217,169,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-tag {
+    display: inline-block;
+    background: rgba(79,142,247,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(79,142,247,0.3);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: #fff;
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+  header h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .header-sub {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+  .header-meta {
+    margin-top: 24px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .meta-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .meta-value {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── LAYOUT ── */
+  main { padding: 40px 60px 80px; max-width: 1400px; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── KPI STRIP ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .kpi:hover { transform: translateY(-2px); border-color: rgba(79,142,247,0.4); }
+  .kpi::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .kpi.blue::before { background: var(--accent); }
+  .kpi.green::before { background: var(--accent2); }
+  .kpi.orange::before { background: var(--accent3); }
+  .kpi.purple::before { background: var(--accent4); }
+  .kpi.red::before { background: var(--danger); }
+  .kpi.teal::before { background: #22d3ee; }
+  .kpi-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    line-height: 1;
+    color: #fff;
+  }
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── CARDS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+  .grid-65 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; margin-bottom: 28px; }
+  .grid-56 { display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; margin-bottom: 28px; }
+
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+  }
+  .chart-desc {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .chart-wrap { position: relative; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-block { margin-bottom: 50px; }
+  .section-block + .section-block { padding-top: 10px; }
+
+  /* ── TABLE ── */
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .table-header {
+    padding: 22px 28px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 12px 20px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid rgba(37,46,72,0.5);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(79,142,247,0.04); }
+  .bar-cell { display: flex; align-items: center; gap: 10px; }
+  .bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .num { font-weight: 600; color: #fff; min-width: 36px; text-align: right; }
+  .pct { font-size: 11px; color: var(--muted); min-width: 40px; text-align: right; }
+
+  /* ── HEATMAP ── */
+  .heatmap-wrap { overflow-x: auto; }
+  .heatmap-table { min-width: 600px; }
+  .heatmap-table th { font-size: 10px; padding: 8px 14px; }
+  .heatmap-table td { font-size: 12px; padding: 9px 14px; text-align: center; }
+  .heat-0 { background: rgba(79,142,247,0.0); }
+  .heat-1 { background: rgba(79,142,247,0.12); }
+  .heat-2 { background: rgba(79,142,247,0.25); }
+  .heat-3 { background: rgba(79,142,247,0.42); color: #fff; font-weight: 600; }
+  .heat-4 { background: rgba(79,142,247,0.65); color: #fff; font-weight: 700; }
+  .heat-5 { background: rgba(79,142,247,0.85); color: #fff; font-weight: 700; }
+  .mot-label { text-align: left !important; font-size: 11px; color: var(--muted); max-width: 220px; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .badge-blue { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .badge-green { background: rgba(56,217,169,0.15); color: var(--accent2); }
+  .badge-orange { background: rgba(247,131,79,0.15); color: var(--accent3); }
+  .badge-red { background: rgba(244,100,106,0.15); color: var(--danger); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 60px;
+    color: var(--muted);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+
+<style id="login-style">
+  #login-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #f4f6f9;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Arial, sans-serif;
+  }
+  #login-box {
+    background: #fff;
+    border: 1px solid #dde1ea;
+    border-radius: 10px;
+    padding: 40px 36px;
+    width: 340px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  #login-box h2 { margin: 0 0 4px; font-size: 18px; color: #1a2035; font-weight: 700; }
+  #login-box p { margin: 0 0 24px; font-size: 13px; color: #7a8aaa; }
+  #login-box input {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid #dde1ea; border-radius: 6px;
+    font-size: 14px; color: #1a2035; outline: none;
+    box-sizing: border-box; margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  #login-box input:focus { border-color: #4f8ef7; }
+  #login-box button {
+    width: 100%; padding: 10px; background: #4f8ef7;
+    color: #fff; border: none; border-radius: 6px;
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  #login-box button:hover { background: #3a7ae0; }
+  #login-error { display: none; margin-top: 10px; font-size: 12px; color: #f4646a; }
+  #login-box .lock { font-size: 32px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div id="login-overlay">
+  <div id="login-box">
+    <div class="lock">🔒</div>
+    <h2>Acesso Restrito</h2>
+    <p>Relatório de Regulação — Sobradinho 2025</p>
+    <input type="password" id="pwd-input" placeholder="Digite a senha" onkeydown="if(event.key==='Enter')checkPwd()">
+    <button onclick="checkPwd()">Entrar</button>
+    <div id="login-error">Senha incorreta. Tente novamente.</div>
+  </div>
+</div>
+<script>
+  function checkPwd() {
+    const pwd = document.getElementById('pwd-input').value;
+    if (pwd === '#sobradinho2026') {
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('login-style').remove();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('pwd-input').value = '';
+      document.getElementById('pwd-input').focus();
+    }
+  }
+  document.getElementById('pwd-input').focus();
+</script>
+
+
+<header>
+  <div class="header-tag">Central de Regulação · CRIL</div>
+  <h1>Relatório de Regulação<br><em>Sobradinho</em> — 2025</h1>
+  <p class="header-sub">Análise completa das solicitações reguladas pela CRIL · Janeiro a Dezembro de 2025</p>
+  <div class="header-meta">
+    <div class="meta-item">
+      <span class="meta-label">Unidade Solicitante</span>
+      <span class="meta-value">HOSP MUN MARIA AUX DE C. TORRES — SOBRADINHO/BA</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Período</span>
+      <span class="meta-value">Jan – Dez / 2025</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Total de Ocorrências</span>
+      <span class="meta-value">1.138 registros</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Unidades de Destino</span>
+      <span class="meta-value">27 unidades</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- KPIs -->
+  <div class="section-block">
+    <div class="kpi-grid">
+      <div class="kpi blue">
+        <div class="kpi-label">Total Regulações</div>
+        <div class="kpi-value">1.138</div>
+        <div class="kpi-sub">Ocorrências no período</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">Atendidos</div>
+        <div class="kpi-value">932</div>
+        <div class="kpi-sub">81,9% do total</div>
+      </div>
+      <div class="kpi red">
+        <div class="kpi-label">Cancelados</div>
+        <div class="kpi-value">185</div>
+        <div class="kpi-sub">16,3% do total</div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-label">Não Pertinentes</div>
+        <div class="kpi-value">21</div>
+        <div class="kpi-sub">1,8% do total</div>
+      </div>
+      <div class="kpi purple">
+        <div class="kpi-label">Média por Mês</div>
+        <div class="kpi-value">94,8</div>
+        <div class="kpi-sub">Regulações/mês</div>
+      </div>
+      <div class="kpi teal">
+        <div class="kpi-label">Idade Média</div>
+        <div class="kpi-value">37,8</div>
+        <div class="kpi-sub">anos · mediana 31</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solicitações por Mês -->
+  <div class="section-block">
+    <div class="section-title"><span class="dot" style="background:var(--accent)"></span>Solicitações por Mês</div>
+    <div class="chart-card">
+      <div class="chart-title">Evolução Mensal das Regulações</div>
+      <div class="chart-desc">Total de ocorrências abertas por mês · Linha separada para os 4 grupos mais frequentes</div>
+      <div class="chart-wrap" style="height:300px">
+        <canvas id="chartMensal"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Motivos + Destinos -->
+  <div class="section-block">
+    <div class="section-title"><span class="dot" style="background:var(--accent2)"></span>Motivos de Solicitação & Unidades de Destino</div>
+    <div class="grid-65">
+      <div class="chart-card">
+        <div class="chart-title">Top 12 Motivos de Solicitação</div>
+        <div class="chart-desc">Ranking por volume de ocorrências</div>
+        <div class="chart-wrap" style="height:380px">
+          <canvas id="chartMotivos"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Top 10 Unidades de Destino</div>
+        <div class="chart-desc">Hospitais que receberam os encaminhamentos</div>
+        <div class="chart-wrap" style="height:380px">
+          <canvas id="chartDestinos"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela top destinos -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="chart-title">Ranking Detalhado — Unidades de Destino</div>
+        <div class="chart-desc">Distribuição percentual dos encaminhamentos</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Unidade de Destino</th>
+            <th>UF</th>
+            <th>Ocorrências</th>
+            <th>% do Total</th>
+            <th style="width:180px">Proporção</th>
+          </tr>
+        </thead>
+        <tbody id="tblDestinos"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Grupos + Mapa de calor -->
+  <div class="section-block">
+    <div class="section-title"><span class="dot" style="background:var(--accent3)"></span>Grupos / Especialidades</div>
+    <div class="grid-56">
+      <div class="chart-card">
+        <div class="chart-title">Distribuição por Grupo Especialidade</div>
+        <div class="chart-desc">Volume de regulações por área clínica</div>
+        <div class="chart-wrap" style="height:340px">
+          <canvas id="chartGrupos"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Evolução Mensal — Top 4 Grupos</div>
+        <div class="chart-desc">Obstetrícia, Ortopedia, Cirurgia Geral e UTI</div>
+        <div class="chart-wrap" style="height:340px">
+          <canvas id="chartGrupoMes"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heatmap Motivo x Destino -->
+    <div class="chart-card" style="margin-bottom:28px">
+      <div class="chart-title">Motivos × Unidades de Destino — Mapa de Calor</div>
+      <div class="chart-desc">Top 5 motivos cruzados com as principais unidades receptoras · Intensidade proporcional ao volume</div>
+      <div class="heatmap-wrap">
+        <table class="heatmap-table">
+          <thead id="heatHead"></thead>
+          <tbody id="heatBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resolutividade + Prioridade + Sexo -->
+  <div class="section-block">
+    <div class="section-title"><span class="dot" style="background:var(--accent4)"></span>Perfil das Regulações</div>
+    <div class="grid-3">
+      <div class="chart-card">
+        <div class="chart-title">Resolutividade</div>
+        <div class="chart-desc">Desfecho das ocorrências reguladas</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartResol"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Prioridade da Regulação</div>
+        <div class="chart-desc">Classificação de urgência ao abrir a ocorrência</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartPrio"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Distribuição por Sexo</div>
+        <div class="chart-desc">Perfil do paciente regulado</div>
+        <div class="chart-wrap" style="height:240px">
+          <canvas id="chartSexo"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transporte -->
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Tipo de Transporte Utilizado</div>
+        <div class="chart-desc">Recurso de transporte acionado para transferência</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="chartTransp"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Alta Prioridade vs Outras — Mensal</div>
+        <div class="chart-desc">Proporção de regulações com Prioridade Alta por mês</div>
+        <div class="chart-wrap" style="height:280px">
+          <canvas id="chartPrioMes"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancelamentos -->
+  <div class="section-block">
+    <div class="section-title"><span class="dot" style="background:var(--danger)"></span>Motivos de Cancelamento</div>
+    <div class="grid-2">
+      <div class="chart-card">
+        <div class="chart-title">Distribuição dos Motivos de Cancelamento / Não Enc.</div>
+        <div class="chart-desc">185 regulações canceladas e 21 não pertinentes · total de 206 registros com motivo informado</div>
+        <div class="chart-wrap" style="height:320px">
+          <canvas id="chartCancel"></canvas>
+        </div>
+      </div>
+      <div>
+        <div class="table-card" style="margin-bottom:0">
+          <div class="table-header">
+            <div class="chart-title">Ranking — Motivos de Cancelamento</div>
+            <div class="chart-desc">Frequência e proporção de cada motivo</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Motivo</th>
+                <th style="text-align:right">N</th>
+                <th style="text-align:right">%</th>
+              </tr>
+            </thead>
+            <tbody id="tblCancel"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>CRIL — Central de Regulação Interestadual · Relatório gerado automaticamente a partir dos dados exportados</span>
+  <span>Período: Jan–Dez/2025 · Unidade: HOSP MUN MARIA AUX — Sobradinho/BA</span>
+</footer>
+
+<script>
+// ── DATA ──
+const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const mensal = [83,77,86,107,105,119,109,83,86,97,89,97];
+
+const motivos = [
+  {label:'Int. Obstétrica - Baixa complex.', n:270},
+  {label:'Int. Obstétrica - Alta Complexidade', n:128},
+  {label:'Cred. 004 - Ortopedia - Fratura MM', n:75},
+  {label:'Avaliação Cirurgia Geral', n:69},
+  {label:'Internação - UTI Adulto', n:50},
+  {label:'Cred. 001/2023 - UTI Adulto Retag.', n:44},
+  {label:'Avaliação Neurológica', n:37},
+  {label:'Avaliação Neurocirúrgica', n:32},
+  {label:'Int. Ortopédica - Fratura exposta', n:28},
+  {label:'Internação Cirúrgica - Adulto Geral', n:25},
+  {label:'Int. Ortopédica - MMSS', n:24},
+  {label:'Avaliação Cirurgia Pediátrica', n:22},
+];
+
+const destinos = [
+  {label:'H. MATERNO INFANTIL DE JUAZEIRO - BA', uf:'BA', n:256},
+  {label:'HOSPITAL REGIONAL DE JUAZEIRO - BA', uf:'BA', n:236},
+  {label:'HOSP. UNIVERSITÁRIO DE PETROLINA - PE', uf:'PE', n:125},
+  {label:'HOSPITAL DOM MALAN - PETROLINA - PE', uf:'PE', n:103},
+  {label:'IVDRBA - INST. VIVER DR. ROBERTO B.', uf:'BA', n:75},
+  {label:'HOSPITAL SÃO PEDRO - REMANSO - BA', uf:'BA', n:42},
+  {label:'H. SÃO FRANCISCO - CAMPO FORMOSO - BA', uf:'BA', n:19},
+  {label:'_HGE - HOSPITAL GERAL DO ESTADO', uf:'BA', n:14},
+  {label:'HOSP. REGIONAL DE PAULO AFONSO - BA', uf:'BA', n:10},
+  {label:'HOSP. MATERNIDADE SANTA MARIA - PE', uf:'PE', n:7},
+];
+
+const grupos = [
+  {label:'Obstetrícia', n:398},{label:'Ortopedia', n:191},
+  {label:'Cirurgia geral', n:94},{label:'UTI', n:94},
+  {label:'Pediatria', n:54},{label:'Neurologia', n:45},
+  {label:'Neurocirurgia', n:42},{label:'Cardiologia', n:38},
+  {label:'Clínica Médica', n:27},{label:'Exames', n:23},
+  {label:'Vascular', n:21},{label:'Oftalmologia', n:19},
+];
+
+const cancelamentos = [
+  {label:'Cancelamento pela unidade', n:80},
+  {label:'Evasão', n:32},
+  {label:'Óbito', n:21},
+  {label:'Sem atualização > 48h', n:17},
+  {label:'Dados insuficientes', n:13},
+  {label:'Perfil ambulatorial', n:10},
+  {label:'Alta médica', n:8},
+  {label:'Resolvido na unidade', n:7},
+  {label:'Unidade possui o recurso', n:5},
+  {label:'Recurso não regulado pela CER', n:4},
+];
+
+const prioridades = [
+  {label:'Intermediária', n:393},{label:'Alta', n:343},
+  {label:'Baixa', n:248},{label:'Não Necessita', n:137},
+  {label:'Óbito', n:16},{label:'Sem Prioridade', n:1},
+];
+
+const transportes = [
+  {label:'Básica (Unidade)', n:677},{label:'Sem Ambulância', n:208},
+  {label:'UTI (Unidade)', n:69},{label:'UTI (SAMU)', n:50},
+  {label:'Básica (SAMU)', n:50},{label:'Rede Humanas UTI', n:48},
+  {label:'UTI (Contrato)', n:24},{label:'Intensiva UTI', n:10},
+  {label:'MedCor UTI Móvel', n:2},
+];
+
+const grpMensal = {
+  'Obstetrícia': [34,31,29,43,39,35,38,26,31,34,31,27],
+  'Ortopedia': [8,10,17,21,19,22,14,12,16,17,17,18],
+  'Cirurgia geral': [6,5,6,9,12,11,12,9,7,8,2,7],
+  'UTI': [7,8,16,7,4,7,9,7,6,4,5,14],
+};
+
+// Heatmap data
+const heatMotivos = [
+  'Int. Obstétrica Baixa',
+  'Int. Obstétrica Alta',
+  'Cred.Ortopedia Fratura',
+  'Aval. Cirurgia Geral',
+  'Internação UTI Adulto',
+];
+const heatDests = [
+  'H.Mat.Juazeiro','H.Reg.Juazeiro','H.Univ.Petrolina','H.Dom Malan','IVDRBA'
+];
+const heatData = [
+  [247,4,0,4,0],
+  [6,44,0,63,0],
+  [0,0,0,0,64],
+  [0,33,20,0,0],
+  [0,8,0,0,0],
+];
+
+// ── COLORS ──
+const BLUE   = 'rgba(79,142,247,';
+const GREEN  = 'rgba(56,217,169,';
+const ORANGE = 'rgba(247,131,79,';
+const PURPLE = 'rgba(192,132,252,';
+const RED    = 'rgba(244,100,106,';
+const TEAL   = 'rgba(34,211,238,';
+
+const palette = [BLUE,GREEN,ORANGE,PURPLE,RED,TEAL,
+  'rgba(251,191,36,','rgba(167,243,208,','rgba(253,164,175,','rgba(196,181,253,',
+  'rgba(125,211,252,','rgba(249,168,212,'];
+
+// ── CHART DEFAULTS ──
+Chart.register(ChartDataLabels);
+Chart.defaults.color = '#7a8aaa';
+Chart.defaults.font.family = 'DM Sans';
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.labels.boxWidth = 10;
+Chart.defaults.plugins.legend.labels.padding = 14;
+// Disable datalabels globally; enable per-chart
+Chart.defaults.plugins.datalabels.display = false;
+
+const gridOpts = {
+  color: 'rgba(37,46,72,0.8)',
+  drawBorder: false,
+};
+
+// ── 1. MENSAL (Line) ──
+new Chart(document.getElementById('chartMensal'), {
+  type: 'line',
+  data: {
+    labels: MESES,
+    datasets: [
+      {
+        label:'Total',
+        data: mensal,
+        borderColor: BLUE+'1)',
+        backgroundColor: BLUE+'0.08)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 2.5,
+        pointBackgroundColor: BLUE+'1)',
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      ...Object.entries(grpMensal).map(([k,v],i) => ({
+        label: k,
+        data: v,
+        borderColor: [GREEN,ORANGE,PURPLE,TEAL][i]+'0.9)',
+        backgroundColor: 'transparent',
+        tension: 0.4,
+        borderWidth: 1.5,
+        borderDash: [5,3],
+        pointRadius: 2,
+      }))
+    ],
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode:'index', intersect:false },
+    plugins: {
+      legend:{ position:'top' },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{
+        display: (ctx) => ctx.datasetIndex === 0,
+        color: '#e8ecf5',
+        font:{ size:10, weight:'600' },
+        anchor:'end', align:'top',
+        formatter: v => v,
+      },
+    },
+    scales: {
+      x: { grid: gridOpts, ticks:{ color:'#7a8aaa' } },
+      y: { grid: gridOpts, ticks:{ color:'#7a8aaa' }, beginAtZero:true },
+    },
+  },
+});
+
+// ── 2. MOTIVOS (Horizontal Bar) ──
+new Chart(document.getElementById('chartMotivos'), {
+  type: 'bar',
+  data: {
+    labels: motivos.map(m => m.label),
+    datasets: [{
+      data: motivos.map(m => m.n),
+      backgroundColor: motivos.map((_,i) => palette[i % palette.length]+'0.75)'),
+      borderColor: motivos.map((_,i) => palette[i % palette.length]+'1)'),
+      borderWidth: 1,
+      borderRadius: 4,
+    }],
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{ display:true, color:'#e8ecf5', font:{ size:10, weight:'600' }, anchor:'end', align:'right', formatter:v=>v },
+    },
+    scales: {
+      x: { grid: gridOpts, ticks:{ color:'#7a8aaa' }, max:310 },
+      y: { grid:{ display:false }, ticks:{ color:'#7a8aaa', font:{ size:10 } } },
+    },
+  },
+});
+
+// ── 3. DESTINOS (Doughnut) ──
+new Chart(document.getElementById('chartDestinos'), {
+  type: 'doughnut',
+  data: {
+    labels: destinos.map(d => d.label),
+    datasets:[{
+      data: destinos.map(d => d.n),
+      backgroundColor: destinos.map((_,i) => palette[i % palette.length]+'0.8)'),
+      borderColor: '#1a2035',
+      borderWidth: 2,
+      hoverOffset: 8,
+    }],
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '62%',
+    plugins: {
+      legend:{ position:'bottom', labels:{ font:{ size:9.5 }, padding:8, boxWidth:8 } },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{
+        display: ctx => ctx.dataset.data[ctx.dataIndex] >= 10,
+        color:'#fff', font:{ size:10, weight:'700' },
+        formatter:(v, ctx) => {
+          const pct = (v/1138*100).toFixed(1);
+          return v + '\n(' + pct + '%)';
+        },
+      },
+    },
+  },
+});
+
+// ── 4. GRUPOS (Horizontal bar) ──
+new Chart(document.getElementById('chartGrupos'), {
+  type: 'bar',
+  data: {
+    labels: grupos.map(g => g.label),
+    datasets:[{
+      data: grupos.map(g => g.n),
+      backgroundColor: grupos.map((_,i) => palette[i % palette.length]+'0.75)'),
+      borderColor: grupos.map((_,i) => palette[i % palette.length]+'1)'),
+      borderWidth:1, borderRadius:4,
+    }],
+  },
+  options: {
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{ display:true, color:'#e8ecf5', font:{ size:10, weight:'600' }, anchor:'end', align:'right', formatter:v=>v },
+    },
+    scales:{
+      x:{ grid:gridOpts, ticks:{ color:'#7a8aaa' }, max:450 },
+      y:{ grid:{ display:false }, ticks:{ color:'#7a8aaa', font:{ size:10.5 } } },
+    },
+  },
+});
+
+// ── 5. GRUPO POR MÊS (Stacked bar) ──
+new Chart(document.getElementById('chartGrupoMes'), {
+  type:'bar',
+  data:{
+    labels: MESES,
+    datasets: Object.entries(grpMensal).map(([k,v],i) => ({
+      label:k, data:v,
+      backgroundColor: [GREEN,ORANGE,PURPLE,TEAL][i]+'0.75)',
+      borderColor: [GREEN,ORANGE,PURPLE,TEAL][i]+'1)',
+      borderWidth:1, borderRadius:2,
+    })),
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ position:'top' },
+      tooltip:{ mode:'index', backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{
+        display: ctx => ctx.dataset.data[ctx.dataIndex] >= 5,
+        color:'#fff', font:{ size:9, weight:'600' },
+        anchor:'center', align:'center',
+        formatter: v => v,
+      },
+    },
+    scales:{
+      x:{ stacked:true, grid:gridOpts, ticks:{ color:'#7a8aaa' } },
+      y:{ stacked:true, grid:gridOpts, ticks:{ color:'#7a8aaa' } },
+    },
+  },
+});
+
+// ── 6. RESOLUTIVIDADE ──
+new Chart(document.getElementById('chartResol'), {
+  type:'doughnut',
+  data:{
+    labels:['Atendido','Cancelado','Não Pertinente'],
+    datasets:[{
+      data:[932,185,21],
+      backgroundColor:[GREEN+'0.8)',RED+'0.8)',ORANGE+'0.75)'],
+      borderColor:'#1a2035', borderWidth:2, hoverOffset:6,
+    }],
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'60%',
+    plugins:{
+      legend:{ position:'bottom' },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{
+        display:true, color:'#fff', font:{ size:11, weight:'700' },
+        formatter:(v,ctx) => ctx.chart.data.labels[ctx.dataIndex]+'\n'+v,
+      },
+    },
+  },
+});
+
+// ── 7. PRIORIDADE ──
+new Chart(document.getElementById('chartPrio'), {
+  type:'bar',
+  data:{
+    labels:prioridades.map(p=>p.label),
+    datasets:[{
+      data:prioridades.map(p=>p.n),
+      backgroundColor:[ORANGE,RED,BLUE,GREEN,PURPLE,TEAL].map(c=>c+'0.8)'),
+      borderColor:[ORANGE,RED,BLUE,GREEN,PURPLE,TEAL].map(c=>c+'1)'),
+      borderWidth:1, borderRadius:5,
+    }],
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{ display:true, color:'#e8ecf5', font:{ size:10, weight:'600' }, anchor:'end', align:'top', formatter:v=>v },
+    },
+    scales:{
+      x:{ grid:{ display:false }, ticks:{ color:'#7a8aaa', font:{ size:9.5 } } },
+      y:{ grid:gridOpts, ticks:{ color:'#7a8aaa' }, max:450 },
+    },
+  },
+});
+
+// ── 8. SEXO ──
+new Chart(document.getElementById('chartSexo'), {
+  type:'doughnut',
+  data:{
+    labels:['Feminino','Masculino','Indefinido'],
+    datasets:[{
+      data:[660,477,1],
+      backgroundColor:[PURPLE+'0.85)',BLUE+'0.85)',GREEN+'0.6)'],
+      borderColor:'#1a2035', borderWidth:2, hoverOffset:6,
+    }],
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'58%',
+    plugins:{
+      legend:{ position:'bottom' },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{
+        display: ctx => ctx.dataset.data[ctx.dataIndex] > 5,
+        color:'#fff', font:{ size:11, weight:'700' },
+        formatter:(v,ctx) => ctx.chart.data.labels[ctx.dataIndex]+'\n'+v,
+      },
+    },
+  },
+});
+
+// ── 9. TRANSPORTE ──
+new Chart(document.getElementById('chartTransp'), {
+  type:'bar',
+  data:{
+    labels: transportes.map(t=>t.label),
+    datasets:[{
+      data: transportes.map(t=>t.n),
+      backgroundColor: transportes.map((_,i)=>palette[i%palette.length]+'0.75)'),
+      borderColor: transportes.map((_,i)=>palette[i%palette.length]+'1)'),
+      borderWidth:1, borderRadius:5,
+    }],
+  },
+  options:{
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{ display:true, color:'#e8ecf5', font:{ size:10, weight:'600' }, anchor:'end', align:'right', formatter:v=>v },
+    },
+    scales:{
+      x:{ grid:gridOpts, ticks:{ color:'#7a8aaa' }, max:760 },
+      y:{ grid:{ display:false }, ticks:{ color:'#7a8aaa', font:{ size:10.5 } } },
+    },
+  },
+});
+
+// ── 10. PRIORIDADE ALTA POR MÊS ──
+const prioAltaMes = [28,32,40,38,31,35,29,27,30,34,26,33];
+new Chart(document.getElementById('chartPrioMes'), {
+  type:'bar',
+  data:{
+    labels: MESES,
+    datasets:[
+      {
+        label:'Prioridade Alta',
+        data: prioAltaMes,
+        backgroundColor: RED+'0.75)',
+        borderColor: RED+'1)',
+        borderWidth:1, borderRadius:4, yAxisID:'y',
+      },
+      {
+        label:'% Prioridade Alta',
+        data: mensal.map((t,i) => +((prioAltaMes[i]/t*100).toFixed(1))),
+        type:'line',
+        borderColor: ORANGE+'1)',
+        backgroundColor: 'transparent',
+        tension:0.4,
+        borderWidth:2,
+        pointRadius:3,
+        yAxisID:'y2',
+      },
+    ],
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{ mode:'index', intersect:false },
+    plugins:{
+      legend:{ position:'top' },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{
+        display: ctx => ctx.datasetIndex === 0,
+        color:'#e8ecf5', font:{ size:9, weight:'600' }, anchor:'end', align:'top', formatter:v=>v,
+      },
+    },
+    scales:{
+      x:{ grid:gridOpts, ticks:{ color:'#7a8aaa' } },
+      y:{ grid:gridOpts, ticks:{ color:'#7a8aaa' }, beginAtZero:true },
+      y2:{ position:'right', grid:{ display:false }, ticks:{ color:ORANGE+'1)', callback:v=>v+'%' } },
+    },
+  },
+});
+
+// ── 11. CANCELAMENTOS (Bar) ──
+new Chart(document.getElementById('chartCancel'), {
+  type:'bar',
+  data:{
+    labels: cancelamentos.map(c=>c.label),
+    datasets:[{
+      data: cancelamentos.map(c=>c.n),
+      backgroundColor: RED+'0.75)',
+      borderColor: RED+'1)',
+      borderWidth:1, borderRadius:5,
+    }],
+  },
+  options:{
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ backgroundColor:'#1a2035', borderColor:'#252e48', borderWidth:1 },
+      datalabels:{ display:true, color:'#e8ecf5', font:{ size:10, weight:'600' }, anchor:'end', align:'right', formatter:v=>v },
+    },
+    scales:{
+      x:{ grid:gridOpts, ticks:{ color:'#7a8aaa' }, max:95 },
+      y:{ grid:{ display:false }, ticks:{ color:'#7a8aaa', font:{ size:10.5 } } },
+    },
+  },
+});
+
+// ── TABELA DESTINOS ──
+const tblD = document.getElementById('tblDestinos');
+const maxD = destinos[0].n;
+const total = 1138;
+destinos.forEach((d,i) => {
+  const pct = (d.n/total*100).toFixed(1);
+  const w = (d.n/maxD*100).toFixed(1);
+  const color = palette[i%palette.length];
+  tblD.innerHTML += `<tr>
+    <td style="color:var(--muted);font-weight:600">${i+1}</td>
+    <td>${d.label}</td>
+    <td><span class="badge ${d.uf==='PE'?'badge-orange':'badge-blue'}">${d.uf}</span></td>
+    <td><span class="num">${d.n.toLocaleString('pt-BR')}</span></td>
+    <td><span class="pct">${pct}%</span></td>
+    <td><div class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:${w}%;background:${color}1)"></div></div></div></td>
+  </tr>`;
+});
+
+// ── TABELA CANCELAMENTOS ──
+const tblC = document.getElementById('tblCancel');
+const totalC = cancelamentos.reduce((a,c)=>a+c.n,0);
+cancelamentos.forEach(c => {
+  const pct = (c.n/totalC*100).toFixed(1);
+  tblC.innerHTML += `<tr>
+    <td>${c.label}</td>
+    <td style="text-align:right;font-weight:600;color:#fff">${c.n}</td>
+    <td style="text-align:right;color:var(--muted)">${pct}%</td>
+  </tr>`;
+});
+
+// ── HEATMAP ──
+const maxH = Math.max(...heatData.flat());
+const hHead = document.getElementById('heatHead');
+const hBody = document.getElementById('heatBody');
+
+hHead.innerHTML = '<tr><th style="text-align:left;min-width:180px">Motivo / Destino</th>'
+  + heatDests.map(d=>`<th>${d}</th>`).join('') + '</tr>';
+
+heatMotivos.forEach((m,i) => {
+  const cells = heatData[i].map(v => {
+    const level = v===0?0:v<10?1:v<30?2:v<70?3:v<200?4:5;
+    return `<td class="heat-${level}">${v||'—'}</td>`;
+  }).join('');
+  hBody.innerHTML += `<tr><td class="mot-label">${m}</td>${cells}</tr>`;
+});
+</script>
+</body>
+</html>
